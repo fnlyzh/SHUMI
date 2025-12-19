@@ -2,6 +2,7 @@ import json
 import os
 import pytz
 from dataclasses import dataclass
+import dotenv
 from datetime import datetime, date
 
 from typing import Dict, List
@@ -36,3 +37,10 @@ class CalendarConfig:
 			timezone=data["timezone"],
 			tz=pytz.timezone(data["timezone"]),
 		)
+
+def load_calendar_config():
+	dotenv.load_dotenv()
+	cfg_path = os.getenv("CALENDER_CONFIG_PATH")
+	if cfg_path is None:
+		raise RuntimeError("CALENDER_CONFIG_PATH is not set in .env")
+	return CalendarConfig.from_json(cfg_path)

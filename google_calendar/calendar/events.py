@@ -12,7 +12,7 @@ def create_event(
 	end_datetime,
 	location="",
 	description="",
-	course_code=None,
+	subcategory=None,
 	color_id="",
 	recurrence=None
 ) -> None:
@@ -28,7 +28,7 @@ def create_event(
 		end_datetime: end time of event
 		location: location of event
 		description: description of event
-		course_code: name of course
+		subcategory: name of subcategory, (e.g. course code for academic)
 		color_id: color of event
 		recurrence: rule for recurrence of event, or None for one-time event
 	"""
@@ -44,10 +44,10 @@ def create_event(
 		event_body["recurrence"] = recurrence
 		event_body["colorId"] = color_id
 	
-	if course_code:
+	if subcategory:
 		event_body["extendedProperties"] = {
 			"private": {
-				"courseCode": course_code
+				"subcategory": subcategory
 			}
 		}
 
@@ -120,7 +120,7 @@ def create_term_class_events(
 		location=location,
 		description=description,
 		color_id=cfg.recurrence_color_id,
-		course_code=course_code,
+		subcategory=course_code,
 		recurrence=recurrence
 	)
 

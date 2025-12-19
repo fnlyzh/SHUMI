@@ -2,6 +2,7 @@ import json
 import os
 import pytz
 from dataclasses import dataclass
+import dotenv
 
 from typing import Dict
 
@@ -29,3 +30,10 @@ class DiscordConfig:
 			timezone=data["timezone"],
 			tz=pytz.timezone(data["timezone"]),
 		)
+
+def load_discord_config() -> DiscordConfig:
+	dotenv.load_dotenv()
+	cfg_path = os.getenv("DISCORD_CONFIG_PATH")
+	if cfg_path is None:
+		raise RuntimeError("DISCORD_CONFIG_PATH is not set in .env")
+	return DiscordConfig.from_json(cfg_path)

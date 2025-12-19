@@ -25,15 +25,13 @@ def _total_time_per_course(events):
 	"""
 	totals = defaultdict(float)
 	for event in events:
-		course_code = event.get("extendedProperties", {}).get("private", {}).get("courseCode")
+		course_code = event.get("extendedProperties", {}).get("private", {}).get("subcategory")
 		if course_code is None:
-			print("[debug]: course_code is none")
 			continue
 
 		start = event['start'].get('dateTime')
 		end = event['end'].get('dateTime')
 		if start is None or end is None:
-			print("[debug]: start or end is none")
 			continue
 
 		start_dt = datetime.datetime.fromisoformat(start)

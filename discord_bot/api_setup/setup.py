@@ -5,12 +5,6 @@ from ..config import DiscordConfig
 from dotenv import load_dotenv
 load_dotenv()
 
-def load_config() -> DiscordConfig:
-    cfg_path = os.getenv("DISCORD_CONFIG_PATH")
-    if cfg_path is None:
-        raise RuntimeError("DISCORD_CONFIG_PATH is not set in .env")
-    return DiscordConfig.from_json(cfg_path)
-
 def load_token():
     token = os.getenv("DISCORD_TOKEN")
     if token is None:

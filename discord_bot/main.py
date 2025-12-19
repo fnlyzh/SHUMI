@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 import logging
 
-from .api_setup.setup import load_config, load_token, setup_logging
-from .config import DiscordConfig
+from .api_setup.setup import load_token, setup_logging
+from .config import DiscordConfig, load_discord_config
 from .discord_modules.record_time import record_voice_time
 
 def create_bot(cfg: DiscordConfig) -> commands.Bot:
@@ -25,7 +25,7 @@ def create_bot(cfg: DiscordConfig) -> commands.Bot:
     return bot
 
 def main():
-    cfg = load_config()
+    cfg = load_discord_config()
     token = load_token()
     
     handler = setup_logging()

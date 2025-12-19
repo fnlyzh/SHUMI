@@ -14,7 +14,7 @@ from .analytics.study_time import current_week, previous_week
 from .tasks.tasks import read_upcoming_tasks
 from .tasks.utils import print_tasks
 
-from .config import CalendarConfig
+from .config import load_calendar_config
 
 # Calender API return object source:
 # https://developers.google.com/workspace/calendar/api/v3/reference/events
@@ -23,11 +23,7 @@ from .config import CalendarConfig
 # https://developers.google.com/tasks/reference/rest/v1/tasks
 
 def main():
-	cfg_path = os.getenv("CALENDER_CONFIG_PATH")
-	if cfg_path is None:
-		raise RuntimeError("CALENDER_CONFIG_PATH is not set in .env")
-	cfg = CalendarConfig.from_json(cfg_path)
-
+	cfg = load_calendar_config()
 	creds = get_credentials()
 	calendar_service = get_calendar_service(creds)
 	tasks_service = get_tasks_service(creds)
