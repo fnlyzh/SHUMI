@@ -4,8 +4,8 @@ load_dotenv()
 
 import datetime
 
-from .auth import get_credentials
-from .service import get_calendar_service, get_tasks_service
+from .api_setup.auth import get_credentials
+from .api_setup.service import get_calendar_service, get_tasks_service
 
 from .calendar.queries import read_upcoming_events
 from .calendar.events import create_term_class_events, create_event
