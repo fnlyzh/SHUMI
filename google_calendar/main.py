@@ -16,6 +16,9 @@ from .tasks.utils import print_tasks
 
 from .config import load_calendar_config
 
+from integration.gcal_integration import flush_sessions_to_calendar
+from discord_bot.config import load_discord_config
+
 # Calender API return object source:
 # https://developers.google.com/workspace/calendar/api/v3/reference/events
 
@@ -42,10 +45,11 @@ def main():
 	# 	day_of_week=2, start_time=datetime.time(8,0), end_time=datetime.time(11,0),
 	# 	location="Building A, Room 101", description="epic lecture")
 
-	print("Current week study times (hours):", current_week(calendar_service, cfg))
+	# print("Current week study times (hours):", current_week(calendar_service, cfg))
 	# print("Previous week study times (hours):", previous_week(calendar_service, cfg, weeks_ago=2))
 
-	
+	discord_cfg = load_discord_config()
+	flush_sessions_to_calendar(calendar_service, discord_cfg, cfg)
 
 if __name__ == "__main__":
 	main()

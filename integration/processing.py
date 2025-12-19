@@ -5,7 +5,7 @@ def merge_sessions(sessions, merge_gap_minutes, min_duration_minutes):
 	Merge consecutive sessions in the same category/subcategory if the gap is <= merge_gap_minutes.
 	Drop sessions shorter than min_duration_minutes after merging.
 	"""
-	if sessions is None:
+	if not sessions:
 		return []
 
 	sessions.sort(key=lambda s: s.start_time)

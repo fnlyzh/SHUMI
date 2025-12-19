@@ -10,7 +10,6 @@ class DataConfig:
 	merge_gap_minutes: int
 	min_duration_minutes: int
 
-
 	@staticmethod
 	def from_json(path: str) -> "DataConfig":
 		"""
@@ -33,3 +32,10 @@ def load_integration_config():
 	if cfg_path is None:
 		raise RuntimeError("DATA_CONFIG_PATH is not set in .env")
 	return DataConfig.from_json(cfg_path)
+
+def load_data_path() -> str:
+	dotenv.load_dotenv()
+	data_path = os.getenv("DATA_PATH")
+	if data_path is None:
+		raise RuntimeError("DATA_PATH is not set in .env")
+	return data_path
