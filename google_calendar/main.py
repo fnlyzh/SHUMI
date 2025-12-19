@@ -7,15 +7,14 @@ import datetime
 from .api_setup.auth import get_credentials
 from .api_setup.service import get_calendar_service, get_tasks_service
 
-from .calendar.queries import read_upcoming_events
-from .calendar.events import create_term_class_events, create_event
+from .calendar.events import create_term_class_events, create_event, read_upcoming_events
 from .calendar.utils import print_events
 from .analytics.study_time import current_week, previous_week
 
-from .tasks.queries import read_upcoming_tasks
+from .tasks.tasks import read_upcoming_tasks
 from .tasks.utils import print_tasks
 
-from .settings import CalendarConfig
+from .config import CalendarConfig
 
 # Calender API return object source:
 # https://developers.google.com/workspace/calendar/api/v3/reference/events
