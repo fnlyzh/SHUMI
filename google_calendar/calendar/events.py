@@ -2,7 +2,7 @@ import datetime
 from googleapiclient.errors import HttpError
 import pytz
 
-from ..config_personal import CALENDARS, TERM_START_MONDAY, TERM_WEEKS, BREAK_WEEKS, TIMEZONE
+from ..config_personal import CALENDARS, TERM_START_MONDAY, TERM_WEEKS, BREAK_WEEKS, TIMEZONE, RECURRENCE_COLOR_ID
 
 def create_event(
 	service,
@@ -12,6 +12,7 @@ def create_event(
 	end_datetime,
 	location="",
 	description="",
+	color_id="",
 	recurrence=None
 ) -> None:
 	"""
@@ -37,6 +38,7 @@ def create_event(
 
 	if recurrence:
 		event_body["recurrence"] = recurrence
+		event_body["colorId"] = color_id
 
 	try:
 		event = service.events().insert(calendarId=calendar_id, body=event_body).execute()
@@ -69,7 +71,7 @@ def create_term_class_events(
 		location="": location of event
 		description="": description of event
 	"""
-	
+
 	tz = pytz.timezone(TIMEZONE)
 	calendar_id = CALENDARS.get(calendar_key)
 	if not calendar_id:
@@ -103,5 +105,6 @@ def create_term_class_events(
 		end_datetime=end_dt,
 		location=location,
 		description=description,
+		color_id=RECURRENCE_COLOR_ID,
 		recurrence=recurrence
 	)
