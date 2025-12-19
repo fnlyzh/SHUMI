@@ -4,6 +4,8 @@
 credentials.json
 token.json
 
+config_personal.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

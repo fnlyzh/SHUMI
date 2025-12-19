@@ -11,7 +11,7 @@ def read_upcoming_events(service, max_results=10):
 			.list(
 				calendarId="primary",
 				timeMin=now,
-				maxResults=10,
+				maxResults=max_results,
 				singleEvents=True,
 				orderBy="startTime",
 			)
