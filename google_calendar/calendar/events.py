@@ -1,11 +1,11 @@
 import datetime
 from googleapiclient.errors import HttpError
-import pytz
 
-from ..config_personal import CALENDARS, TERM_START_MONDAY, TERM_WEEKS, BREAK_WEEKS, TIMEZONE, RECURRENCE_COLOR_ID
+from .utils import get_calendar_id
 
 def create_event(
 	service,
+	cfg,
 	calendar_id,
 	title,
 	start_datetime,
@@ -20,6 +20,7 @@ def create_event(
 
 	Args
 		service: Google Calendar service
+		cfg: calendar configurations
 		calendar_id: ID of calendar to create the event in
 		title: title of event
 		start_datetime: start time of event
@@ -32,8 +33,8 @@ def create_event(
 		"summary": title,
 		"location": location,
 		"description": description,
-		"start": {"dateTime": start_datetime.isoformat(), "timeZone": TIMEZONE},
-		"end": {"dateTime": end_datetime.isoformat(), "timeZone": TIMEZONE},
+		"start": {"dateTime": start_datetime.isoformat(), "timeZone": cfg.timezone},
+		"end": {"dateTime": end_datetime.isoformat(), "timeZone": cfg.timezone},
 	}
 
 	if recurrence:
@@ -50,6 +51,7 @@ def create_event(
 
 def create_term_class_events(
 	service,
+	cfg,
 	calendar_key,
 	title,
 	day_of_week,
@@ -72,39 +74,58 @@ def create_term_class_events(
 		description="": description of event
 	"""
 
-	tz = pytz.timezone(TIMEZONE)
-	calendar_id = CALENDARS.get(calendar_key)
-	if not calendar_id:
-		raise ValueError(f"Calendar key '{calendar_key}' not found in config")
+	tz = cfg.tz
+	calendar_id = get_calendar_id(cfg, calendar_key)
 
 	# Start date for week 1
-	class_date = TERM_START_MONDAY + datetime.timedelta(days=day_of_week)
+	class_date = cfg.term_start_monday + datetime.timedelta(days=day_of_week)
 	start_dt = tz.localize(datetime.datetime.combine(class_date, start_time))
 	end_dt = tz.localize(datetime.datetime.combine(class_date, end_time))
 
 	# RRULE: weekly recurrence
-	rrule = f"RRULE:FREQ=WEEKLY;COUNT={TERM_WEEKS}"
+	rrule = f"RRULE:FREQ=WEEKLY;COUNT={cfg.term_weeks}"
 
 	# EXDATEs for skipped weeks
 	exdates = []
-	for week in BREAK_WEEKS:
+	for week in cfg.break_weeks:
 		delta_days = (week - 1) * 7 + day_of_week
-		skip_date = TERM_START_MONDAY + datetime.timedelta(days=delta_days)
+		skip_date = cfg.term_start_monday + datetime.timedelta(days=delta_days)
 		ex_dt = tz.localize(datetime.datetime.combine(skip_date, start_time))
 		exdates.append(ex_dt.strftime("%Y%m%dT%H%M%S"))
 
 	recurrence = [rrule]
 	if exdates:
-		recurrence.extend([f"EXDATE;TZID={TIMEZONE}:{d}" for d in exdates])
+		recurrence.extend([f"EXDATE;TZID={cfg.timezone}:{d}" for d in exdates])
 
 	create_event(
 		service=service,
+		cfg=cfg,
 		calendar_id=calendar_id,
 		title=title,
 		start_datetime=start_dt,
 		end_datetime=end_dt,
 		location=location,
 		description=description,
-		color_id=RECURRENCE_COLOR_ID,
+		color_id=cfg.recurrence_color_id,
 		recurrence=recurrence
 	)
+
+def read_events_for_week(service, cfg, calendar_id, week_start):
+	"""
+	Read all events from Monday to end of Sunday of the same week week_start
+	"""
+
+	tz = cfg.tz
+	start_dt = datetime.datetime.combine(week_start, datetime.time.min).replace(tzinfo=tz)
+	end_dt = datetime.datetime.combine(week_start + datetime.timedelta(days=6),
+									   datetime.time.max).replace(tzinfo=tz)
+	
+	events_result = service.events().list(
+		calendarId=calendar_id,
+		timeMin=start_dt.isoformat(),
+		timeMax=end_dt.isoformat(),
+		singleEvents=True,
+		orderBy="startTime"
+	).execute()
+
+	return events_result.get("items", [])
