@@ -23,9 +23,9 @@ from .config import CalendarConfig
 # https://developers.google.com/tasks/reference/rest/v1/tasks
 
 def main():
-	cfg_path = os.getenv("GCAL_CONFIG_PATH")
+	cfg_path = os.getenv("CALENDER_CONFIG_PATH")
 	if cfg_path is None:
-		raise RuntimeError("GCAL_CONFIG_PATH is not set in .env")
+		raise RuntimeError("CALENDER_CONFIG_PATH is not set in .env")
 	cfg = CalendarConfig.from_json(cfg_path)
 
 	creds = get_credentials()
