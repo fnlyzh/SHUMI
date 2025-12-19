@@ -1,18 +1,20 @@
 import datetime
 
+from collections import defaultdict
+
 from ..calendar.utils import get_calendar_id
 from ..calendar.events import read_events_for_week
 
-def _get_monday_for_week(week_offset=0):
+def _get_monday_for_week(cfg, week_offset=0):
 	"""
 	Returns the date of Monday for the week.
 	week_offset=0 -> current week
 	week_offset=-1 -> previous week
 	"""
-	today = datetime.date.today()
+	now = datetime.datetime.now(cfg.tz)
 	
 	# Monday = 0
-	monday = today - datetime.timedelta(days=today.weekday())
+	monday = now - datetime.timedelta(days=now.weekday())
 	target_monday = monday + datetime.timedelta(weeks=week_offset)
 	
 	return target_monday
@@ -21,21 +23,25 @@ def _total_time_per_course(events):
 	"""
 	Returns a dict: {course_title: total_hours}
 	"""
-	totals = {}
+	totals = defaultdict(float)
 	for event in events:
-		start = event['start'].get('dateTime', event['start'].get('date'))
-		end = event['end'].get('dateTime', event['end'].get('date'))
+		course_code = event.get("extendedProperties", {}).get("private", {}).get("courseCode")
+		if course_code is None:
+			print("[debug]: course_code is none")
+			continue
 
-		# parse datetime strings
+		start = event['start'].get('dateTime')
+		end = event['end'].get('dateTime')
+		if start is None or end is None:
+			print("[debug]: start or end is none")
+			continue
+
 		start_dt = datetime.datetime.fromisoformat(start)
 		end_dt = datetime.datetime.fromisoformat(end)
 
-		duration = (end_dt - start_dt).total_seconds() / 3600  # in hours
+		totals[course_code] += (end_dt - start_dt).total_seconds() / 3600
 
-		title = event.get("summary", "(unknown)")
-		totals[title] = totals.get(title, 0) + duration
-
-	return totals
+	return dict(totals)
 
 def weekly_study_time(service, cfg, calendar_key, week_offset=0):
 	"""
@@ -45,7 +51,7 @@ def weekly_study_time(service, cfg, calendar_key, week_offset=0):
 	"""
 	calendar_id = get_calendar_id(cfg, calendar_key)
 
-	week_start = _get_monday_for_week(week_offset)
+	week_start = _get_monday_for_week(cfg, week_offset)
 	events = read_events_for_week(service, cfg, calendar_id, week_start)
 	return _total_time_per_course(events)
 

@@ -41,12 +41,13 @@ def main():
 	# print_tasks(tasks, fields=["title", "due", "notes"])
 
 	# create_term_class_events(
-	# 	calendar_service, cfg, calendar_key="academic", title="COMP9999 Lecture 1",
-	# 	day_of_week=1, start_time=datetime.time(9,0), end_time=datetime.time(11,0),
+	# 	calendar_service, cfg, calendar_key="academic",
+	# 	course_code="COMP1934", class_type="Lecture 2",
+	# 	day_of_week=2, start_time=datetime.time(8,0), end_time=datetime.time(11,0),
 	# 	location="Building A, Room 101", description="epic lecture")
 
 	print("Current week study times (hours):", current_week(calendar_service, cfg))
-	print("Previous week study times (hours):", previous_week(calendar_service, cfg, weeks_ago=2))
+	# print("Previous week study times (hours):", previous_week(calendar_service, cfg, weeks_ago=2))
 
 	
 

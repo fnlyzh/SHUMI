@@ -12,6 +12,7 @@ def create_event(
 	end_datetime,
 	location="",
 	description="",
+	course_code=None,
 	color_id="",
 	recurrence=None
 ) -> None:
@@ -25,8 +26,10 @@ def create_event(
 		title: title of event
 		start_datetime: start time of event
 		end_datetime: end time of event
-		location="": location of event
-		description="": description of event
+		location: location of event
+		description: description of event
+		course_code: name of course
+		color_id: color of event
 		recurrence: rule for recurrence of event, or None for one-time event
 	"""
 	event_body = {
@@ -40,6 +43,13 @@ def create_event(
 	if recurrence:
 		event_body["recurrence"] = recurrence
 		event_body["colorId"] = color_id
+	
+	if course_code:
+		event_body["extendedProperties"] = {
+			"private": {
+				"courseCode": course_code
+			}
+		}
 
 	try:
 		event = service.events().insert(calendarId=calendar_id, body=event_body).execute()
@@ -53,7 +63,8 @@ def create_term_class_events(
 	service,
 	cfg,
 	calendar_key,
-	title,
+	course_code,
+	class_type,
 	day_of_week,
 	start_time,
 	end_time,
@@ -67,11 +78,13 @@ def create_term_class_events(
 		service: Google Calendar service
 		calendar_key: name of calendar to create the event in
 		day_of_week: day of week of event
-		title: title of event
+		course_code: name of course (e.g. COMP1234)
+		class_type: type of class (e.g. Lecture 1, Tutorial, Consultation)
 		start_time: start time of event
 		end_time: end time of event
 		location="": location of event
 		description="": description of event
+		course_code: name of course
 	"""
 
 	tz = cfg.tz
@@ -101,12 +114,13 @@ def create_term_class_events(
 		service=service,
 		cfg=cfg,
 		calendar_id=calendar_id,
-		title=title,
+		title=f"{course_code} {class_type}",
 		start_datetime=start_dt,
 		end_datetime=end_dt,
 		location=location,
 		description=description,
 		color_id=cfg.recurrence_color_id,
+		course_code=course_code,
 		recurrence=recurrence
 	)
 
