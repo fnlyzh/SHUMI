@@ -2,7 +2,7 @@ import datetime
 
 from googleapiclient.errors import HttpError
 
-def read_upcoming_events(service, max_results=10):
+def read_upcoming_tasks(service, max_results=20):
 	now = datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
 
 	try:
@@ -11,7 +11,7 @@ def read_upcoming_events(service, max_results=10):
 			.list(
 				calendarId="primary",
 				timeMin=now,
-				maxResults=10,
+				maxResults=max_results,
 				singleEvents=True,
 				orderBy="startTime",
 			)
