@@ -11,5 +11,5 @@ def load_token():
     return token
 
 def setup_logging(log_file="discord.log") -> logging.FileHandler:
-    handler = logging.FileHandler(filename=log_file, encoding="utf-8", mode="w")
+    handler = logging.FileHandler(filename=log_file, encoding="UTF-8", mode="w")
     return handler

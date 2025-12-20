@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 from dataclasses import dataclass
 from datetime import datetime, date
 import pytz
@@ -12,15 +12,14 @@ class DataConfig:
 	min_duration_minutes: int
 
 	@staticmethod
-	def from_json(path: str) -> "DataConfig":
+	def from_json(path: Path) -> "DataConfig":
 		"""
 		Load config from a JSON file
 		"""
-		if not os.path.exists(path):
-			raise FileNotFoundError(f"Personal config JSON not found at {path}")
-
-		with open(path, "r", encoding="utf-8") as f:
-			data = json.load(f)
+		if not path.exists():
+			raise FileNotFoundError(f"Data config JSON not found at {path}")
+		
+		data = json.loads(path.read_text(encoding="UTF-8"))
 
 		return DataConfig(
 			merge_gap_minutes=data["merge_gap_minutes"],
@@ -39,15 +38,14 @@ class CalendarConfig:
 	tz: pytz.BaseTzInfo
 
 	@staticmethod
-	def from_json(path: str) -> "CalendarConfig":
+	def from_json(path: Path) -> "CalendarConfig":
 		"""
 		Load config from a JSON file
 		"""
-		if not os.path.exists(path):
-			raise FileNotFoundError(f"Personal config JSON not found at {path}")
-
-		with open(path, "r", encoding="utf-8") as f:
-			data = json.load(f)
+		if not path.exists():
+			raise FileNotFoundError(f"Calendar config JSON not found at {path}")
+		
+		data = json.loads(path.read_text(encoding="UTF-8"))
 
 		return CalendarConfig(
 			calendars=data["calendars"],
@@ -68,15 +66,14 @@ class DiscordConfig:
 	tz: pytz.BaseTzInfo
 
 	@staticmethod
-	def from_json(path: str) -> "DiscordConfig":
+	def from_json(path: Path) -> "DiscordConfig":
 		"""
 		Load config from a JSON file
 		"""
-		if not os.path.exists(path):
-			raise FileNotFoundError(f"Personal config JSON not found at {path}")
-
-		with open(path, "r", encoding="utf-8") as f:
-			data = json.load(f)
+		if not path.exists():
+			raise FileNotFoundError(f"Data config JSON not found at {path}")
+		
+		data = json.loads(path.read_text(encoding="UTF-8"))
 
 		return DiscordConfig(
 			channels=data["voice_channels"],
