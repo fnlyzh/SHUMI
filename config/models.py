@@ -59,6 +59,27 @@ class CalendarConfig:
 
 
 @dataclass(frozen=True)
+class TasksConfig:
+	tasklists: Dict[str, str]
+	rate_limit: Dict[str, int]
+
+	@staticmethod
+	def from_json(path: Path) -> "TasksConfig":
+		"""
+		Load config from a JSON file
+		"""
+		if not path.exists():
+			raise FileNotFoundError(f"Tasks config JSON not found at {path}")
+		
+		data = json.loads(path.read_text(encoding="UTF-8"))
+
+		return TasksConfig(
+			tasklists=data["tasklists"],
+			rate_limit=data.get("rate_limit", {"batch_size": 3, "sleep_seconds": 3})
+		)
+
+
+@dataclass(frozen=True)
 class DiscordConfig:
 	channels: Dict[str, Dict[str, int]]
 	study_role_id: int

@@ -3,7 +3,7 @@ from discord.ext import commands
 import logging
 
 from .api_setup.setup import load_token, setup_logging
-from config.loader import load_discord_config
+from config.handler import load_discord_config
 from .discord_modules.record_time import record_voice_time
 
 def create_bot(cfg) -> commands.Bot:

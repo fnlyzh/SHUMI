@@ -1,7 +1,7 @@
 from .calendar.events import create_event
 from storage.utils import load_sessions #, clear_sessions
 from storage.processing import merge_sessions
-from config.loader import load_integration_config
+from config.handler import load_integration_config
 
 def flush_sessions_to_calendar(service, discord_cfg, calendar_cfg):
 	sessions = load_sessions()

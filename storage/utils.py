@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from core.models import VoiceSession
-from config.loader import load_data_path
+from config.handler import load_data_path
 
 SESSIONS_FILE: Path = load_data_path()
 

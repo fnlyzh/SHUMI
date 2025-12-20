@@ -2,9 +2,7 @@
 credentials.json
 token.json
 
-calendar.json
-discord.json
-integration.json
+config/json/
 voice_sessions.jsonl
 
 # Byte-compiled / optimized / DLL files
