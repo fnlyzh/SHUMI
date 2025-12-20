@@ -1,7 +1,3 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
 import datetime
 
 from .api_setup.auth import get_credentials
@@ -14,10 +10,9 @@ from .analytics.study_time import current_week, previous_week
 from .tasks.tasks import read_upcoming_tasks
 from .tasks.utils import print_tasks
 
-from .config import load_calendar_config
+from config.loader import load_calendar_config, load_discord_config
 
-from integration.gcal_integration import flush_sessions_to_calendar
-from discord_bot.config import load_discord_config
+from .gcal_integration import flush_sessions_to_calendar
 
 # Calender API return object source:
 # https://developers.google.com/workspace/calendar/api/v3/reference/events

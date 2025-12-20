@@ -3,10 +3,10 @@ from discord.ext import commands
 import logging
 
 from .api_setup.setup import load_token, setup_logging
-from .config import DiscordConfig, load_discord_config
+from config.loader import load_discord_config
 from .discord_modules.record_time import record_voice_time
 
-def create_bot(cfg: DiscordConfig) -> commands.Bot:
+def create_bot(cfg) -> commands.Bot:
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True

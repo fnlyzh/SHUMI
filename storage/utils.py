@@ -1,10 +1,11 @@
 import json
 import os
 
-from .data_block import VoiceSession
+from core.models import VoiceSession
+from config.loader import load_data_path
 
-from .config import load_data_path
 SESSIONS_FILE = load_data_path()
+
 
 def append_session(session):
 	os.makedirs(os.path.dirname(SESSIONS_FILE), exist_ok=True)

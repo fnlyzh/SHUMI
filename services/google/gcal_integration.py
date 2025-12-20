@@ -1,7 +1,7 @@
-from google_calendar.calendar.events import create_event
-from .sessions_store import load_sessions #, clear_sessions
-from .processing import merge_sessions
-from .config import load_integration_config
+from .calendar.events import create_event
+from storage.utils import load_sessions #, clear_sessions
+from storage.processing import merge_sessions
+from config.loader import load_integration_config
 
 def flush_sessions_to_calendar(service, discord_cfg, calendar_cfg):
 	sessions = load_sessions()
@@ -32,6 +32,6 @@ def flush_sessions_to_calendar(service, discord_cfg, calendar_cfg):
 			)
 		except Exception as err:
 			print(f"[error] failed to create event: {err}")
-			return  # do NOT clear sessions if something fails
+			continue
 
 	# clear_sessions()

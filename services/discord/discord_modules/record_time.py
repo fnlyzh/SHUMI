@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 from .utils import get_time_log_channel, is_join, is_leave, build_duration_message
-from integration.saving import save_voice_session
+from storage.saving import save_voice_session
 
 async def record_voice_time(bot, cfg, member, before, after):
 	# Member joined
@@ -29,7 +29,6 @@ async def record_voice_time(bot, cfg, member, before, after):
 				and f"{category_name} - {voice_channel_name}" in msg.content
 			):
 				start_time = msg.created_at.replace(tzinfo=timezone.utc)
-				end_time = datetime.now(timezone.utc)
 
 				print("[debug]: save voice session")
 

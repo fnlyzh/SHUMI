@@ -1,11 +1,11 @@
 # My custom ignores
-.notes/
-
 credentials.json
 token.json
 
-config/
-data/
+calendar.json
+discord.json
+integration.json
+voice_sessions.jsonl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

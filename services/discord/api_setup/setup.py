@@ -1,6 +1,5 @@
 import os
 import logging
-from ..config import DiscordConfig
 
 from dotenv import load_dotenv
 load_dotenv()
